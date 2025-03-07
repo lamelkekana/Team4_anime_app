@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy<2
+requests
+dill
+scikit-learn
+scikit-surprise
+scipy
+cython
+
+
