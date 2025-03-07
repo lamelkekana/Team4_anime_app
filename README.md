@@ -121,11 +121,11 @@ Combines both techniques for more accurate and diverse recommendations.
 
 ### Contributors
 
-Lindelwe Mathonsi,
-Lesego Malatsi,
-Lamel Kekana,
-Vrishti Singh,
-Laudicia Ramasenya
+- Lindelwe Mathonsi
+- Lesego Malatsi
+- Lamel Kekana
+- Vrishti Singh
+- Laudicia Ramasenya
 
 
 
