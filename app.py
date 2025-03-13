@@ -6,7 +6,7 @@ import dill
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
 
-@st.cache_data
+@st.cache_resource
 def load_svd():
     with open("svd_model_samp.pkl", "rb") as mf:
         svd_model = pickle.load(mf)
@@ -298,7 +298,7 @@ def main():
         elif recommendation_type == 'Collaborative-based':
             # User Input (Search method for the anime movie/show)
             st.subheader ("Search UserID")
-            selected_user = st.number_input("🔍 Enter userID:", step=1)
+            selected_user = st.number_input("🔍 Enter userID:", step=1, min_value=1)
             
             # Apply custom CSS
             st.markdown("""
@@ -328,7 +328,7 @@ def main():
             # User Input
             selected_anime = st.selectbox("🔍 Select an Anime:", anime_list)
             st.subheader ("Search UserID")
-            selected_user = st.number_input("🔍 Enter userID:", step=1)
+            selected_user = st.number_input("🔍 Enter userID:", step=1, min_value=1)
             # Apply custom CSS
             st.markdown("""
             <style>
