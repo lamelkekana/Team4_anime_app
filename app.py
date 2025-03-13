@@ -298,7 +298,7 @@ def main():
         elif recommendation_type == 'Collaborative-based':
             # User Input (Search method for the anime movie/show)
             st.subheader ("Search UserID")
-            selected_user = st.number_input("🔍 Enter userID:", step=1, format="%d")
+            selected_user = st.number_input("🔍 Enter userID:", step=1)
             
             # Apply custom CSS
             st.markdown("""
@@ -328,7 +328,7 @@ def main():
             # User Input
             selected_anime = st.selectbox("🔍 Select an Anime:", anime_list)
             st.subheader ("Search UserID")
-            selected_user = st.number_input("🔍 Enter userID:", step=1, format="%d")
+            selected_user = st.number_input("🔍 Enter userID:", step=1)
             # Apply custom CSS
             st.markdown("""
             <style>
