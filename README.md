@@ -1,6 +1,6 @@
 ## Anime Recommendation System
 
-![App pic](app pic.png)
+![App pic](app_pic.png)
 
 ### 📌 Overview
 
