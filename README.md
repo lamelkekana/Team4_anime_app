@@ -1,5 +1,7 @@
 ## Anime Recommendation System
 
+![App pic](app pic.png)
+
 ### 📌 Overview
 
 This Streamlit application provides anime recommendations using three different filtering techniques:
