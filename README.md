@@ -90,7 +90,7 @@ Run the Streamlit app:
 # Make sure you are in the repo directory and that the newly created environment is activated
 streamlit run app.py
 ```
-
+You can also check out the app at [Anime Recommender App](https://team4anime.streamlit.app)!
 ### 📝 Dataset
 
 The application utilizes a dataset containing:
