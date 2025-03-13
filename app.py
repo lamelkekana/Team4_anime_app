@@ -6,16 +6,16 @@ import dill
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
 
-# @st.cache_data
-# def load_svd():
-#     with open("svd_best_model.pkl", "rb") as mf:
-#         svd_model = pickle.load(mf)
+@st.cache_data
+def load_svd():
+    with open("svd_model_samp.pkl", "rb") as mf:
+        svd_model = pickle.load(mf)
 
-#     return svd_model
+    return svd_model
 
 
-# # Load the pickled files (cached version)
-# svd_model = load_svd()
+# Load the pickled files (cached version)
+svd_model = load_svd()
 
 @st.cache_data
 def load_train_data():
@@ -67,56 +67,56 @@ top_popular_anime = df_anime.sort_values(by='ave_rating',ascending=False).head(1
 top_popular_anime = top_popular_anime['anime_id'].tolist()
 
 
-# @st.cache_data
-# def get_recommendations_collaborative(user_id, n=10):
-#     # Check if user exists in the training data,if not return highest rated animes(cold start feature)
-#     if user_id not in df_train['user_id'].unique():
-#         popular_anime = df_anime[df_anime['anime_id'].isin(top_popular_anime)][['name','ave_rating']]
-#         # Sort by ave_rating in descending order
-#         popular_anime = popular_anime.sort_values(by='ave_rating', ascending=False)
-#         return list(zip(popular_anime['name'], popular_anime['ave_rating']))
+@st.cache_data
+def get_recommendations_collaborative(user_id, n=10):
+    # Check if user exists in the training data,if not return highest rated animes(cold start feature)
+    if user_id not in df_train['user_id'].unique():
+        popular_anime = df_anime[df_anime['anime_id'].isin(top_popular_anime)][['name','ave_rating']]
+        # Sort by ave_rating in descending order
+        popular_anime = popular_anime.sort_values(by='ave_rating', ascending=False)
+        return list(zip(popular_anime['name'], popular_anime['ave_rating']))
 
-#     # Get anime already rated by user
-#     rated_anime = set(df_train[df_train['user_id'] == user_id]['anime_id'])
+    # Get anime already rated by user
+    rated_anime = set(df_train[df_train['user_id'] == user_id]['anime_id'])
 
-#     # Predict ratings for unseen anime
-#     predictions = [svd_model.predict(user_id, anime_id) for anime_id in anime_ids if anime_id not in rated_anime]
+    # Predict ratings for unseen anime
+    predictions = [svd_model.predict(user_id, anime_id) for anime_id in anime_ids if anime_id not in rated_anime]
 
-#     # Sort by estimated rating
-#     predictions.sort(key=lambda x: x.est, reverse=True)
+    # Sort by estimated rating
+    predictions.sort(key=lambda x: x.est, reverse=True)
 
-#     # Get top N recommendations (anime_id and predicted rating)
-#     top_n = [(pred.iid, pred.est) for pred in predictions[:n]]
+    # Get top N recommendations (anime_id and predicted rating)
+    top_n = [(pred.iid, pred.est) for pred in predictions[:n]]
 
-#     # Fetch anime names and pair them with predicted ratings
-#     recommended_anime = [(df_anime[df_anime['anime_id'] == anime_id]['name'].values[0], rating) for anime_id, rating in top_n]
+    # Fetch anime names and pair them with predicted ratings
+    recommended_anime = [(df_anime[df_anime['anime_id'] == anime_id]['name'].values[0], rating) for anime_id, rating in top_n]
 
-#     return recommended_anime
+    return recommended_anime
 
-# def get_hybrid_recommendations(user_id, anime_name, n=10, weight_content=0.5, weight_collab=0.5):
-#     # get content based filtered animes
-#     content_recs = get_recommendations_content(anime_name)
+def get_hybrid_recommendations(user_id, anime_name, n=10, weight_content=0.5, weight_collab=0.5):
+    # get content based filtered animes
+    content_recs = get_recommendations_content(anime_name)
     
-#     if isinstance(content_recs, str):  # If anime not found
-#         content_recs = []
+    if isinstance(content_recs, str):  # If anime not found
+        content_recs = []
     
-#     # get collaborative based filtered animes
-#     collab_recs = get_recommendations_collaborative(user_id, n)
+    # get collaborative based filtered animes
+    collab_recs = get_recommendations_collaborative(user_id, n)
 
-#     # Combine recommendations
-#     combined_recs = {}
+    # Combine recommendations
+    combined_recs = {}
     
-#     # Assign weights and normalize scores
-#     for i, anime in enumerate(content_recs):
-#         combined_recs[anime] = combined_recs.get(anime, 0) + (weight_content * (n - i))
+    # Assign weights and normalize scores
+    for i, anime in enumerate(content_recs):
+        combined_recs[anime] = combined_recs.get(anime, 0) + (weight_content * (n - i))
 
-#     for i, anime in enumerate(collab_recs):
-#         combined_recs[anime] = combined_recs.get(anime, 0) + (weight_collab * (n - i))
+    for i, anime in enumerate(collab_recs):
+        combined_recs[anime] = combined_recs.get(anime, 0) + (weight_collab * (n - i))
 
-#     # Sort by weighted score and return top N
-#     final_recommendations = sorted(combined_recs, key=combined_recs.get, reverse=True)[:n]
+    # Sort by weighted score and return top N
+    final_recommendations = sorted(combined_recs, key=combined_recs.get, reverse=True)[:n]
 
-#     return final_recommendations
+    return final_recommendations
 
 
 # Main function of the application
@@ -295,62 +295,62 @@ def main():
                     for i, anime in enumerate(recommendations, 1):
                         st.write(f"{i}. {anime} 🎥")
 
-        # elif recommendation_type == 'Collaborative-based':
-        #     # User Input (Search method for the anime movie/show)
-        #     st.subheader ("Search UserID")
-        #     selected_user = st.number_input("🔍 Enter userID:", step=1, format="%d")
+        elif recommendation_type == 'Collaborative-based':
+            # User Input (Search method for the anime movie/show)
+            st.subheader ("Search UserID")
+            selected_user = st.number_input("🔍 Enter userID:", step=1, format="%d")
             
-        #     # Apply custom CSS
-        #     st.markdown("""
-        #     <style>
-        #         div.stButton > button {
-        #             background-color: black !important;
-        #             color: white !important;
-        #             font-weight: bold;
-        #         }
-        #     </style>
-        #     """, unsafe_allow_html=True)
+            # Apply custom CSS
+            st.markdown("""
+            <style>
+                div.stButton > button {
+                    background-color: black !important;
+                    color: white !important;
+                    font-weight: bold;
+                }
+            </style>
+            """, unsafe_allow_html=True)
 
-        #     if st.button("Get Recommendations 🎬"):
-        #         collab_recommendations = get_recommendations_collaborative(selected_user)
+            if st.button("Get Recommendations 🎬"):
+                collab_recommendations = get_recommendations_collaborative(selected_user)
 
-        #         if collab_recommendations == f"User ID {selected_user} not found. Please enter a valid user ID.":
-        #             st.write("❌ User not found or no recommendations available.")
-        #             st.stop()  # Stop execution and allow the user to try again
-        #         else:
-        #             st.write("### 🎯 Recommended Anime for You:")
-        #             for i, (anime_name, rating) in enumerate(collab_recommendations, 1):
-        #                 st.write(f"{i}. {anime_name} 🎥")
+                if collab_recommendations == f"User ID {selected_user} not found. Please enter a valid user ID.":
+                    st.write("❌ User not found or no recommendations available.")
+                    st.stop()  # Stop execution and allow the user to try again
+                else:
+                    st.write("### 🎯 Recommended Anime for You:")
+                    for i, (anime_name, rating) in enumerate(collab_recommendations, 1):
+                        st.write(f"{i}. {anime_name} 🎥")
 
-        # elif recommendation_type == 'Hybrid':
-        #     # User Input (Search method for the anime movie/show)
-        #     st.subheader ("Search or select your favourite anime")
-        #     # User Input
-        #     selected_anime = st.selectbox("🔍 Select an Anime:", anime_list)
-        #     st.subheader ("Search UserID")
-        #     selected_user = st.number_input("🔍 Enter userID:", step=1, format="%d")
-        #     # Apply custom CSS
-        #     st.markdown("""
-        #     <style>
-        #         div.stButton > button {
-        #             background-color: black !important;
-        #             color: white !important;
-        #             font-weight: bold;
-        #         }
-        #     </style>
-        #     """, unsafe_allow_html=True)
+        elif recommendation_type == 'Hybrid':
+            # User Input (Search method for the anime movie/show)
+            st.subheader ("Search or select your favourite anime")
+            # User Input
+            selected_anime = st.selectbox("🔍 Select an Anime:", anime_list)
+            st.subheader ("Search UserID")
+            selected_user = st.number_input("🔍 Enter userID:", step=1, format="%d")
+            # Apply custom CSS
+            st.markdown("""
+            <style>
+                div.stButton > button {
+                    background-color: black !important;
+                    color: white !important;
+                    font-weight: bold;
+                }
+            </style>
+            """, unsafe_allow_html=True)
 
-        #     if st.button("Get Recommendations 🎬"):
-        #         hyb_recommendations = get_hybrid_recommendations(int(selected_user), selected_anime)
+            if st.button("Get Recommendations 🎬"):
+                hyb_recommendations = get_hybrid_recommendations(int(selected_user), selected_anime)
                 
-        #         if hyb_recommendations is None:
-        #             st.write("❌ Anime not found.")
-        #         else:
-        #             st.write("### 🎯 Recommended Anime for You:")
-        #             for i, anime in enumerate(hyb_recommendations, 1):
-        #                 # Extract the first element if anime is a tuple
-        #                 anime_name = anime[0] if isinstance(anime, tuple) else anime
-        #                 st.write(f"{i}. {anime_name} 🎥")
+                if hyb_recommendations is None:
+                    st.write("❌ Anime not found.")
+                else:
+                    st.write("### 🎯 Recommended Anime for You:")
+                    for i, anime in enumerate(hyb_recommendations, 1):
+                        # Extract the first element if anime is a tuple
+                        anime_name = anime[0] if isinstance(anime, tuple) else anime
+                        st.write(f"{i}. {anime_name} 🎥")
 
 
 if __name__ == "__main__":
