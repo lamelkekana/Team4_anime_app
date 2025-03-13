@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 @st.cache_resource
 def load_svd():
-    with open("svd_model_samp.pkl", "rb") as mf:
+    with open("svd_best.pkl", "rb") as mf:
         svd_model = pickle.load(mf)
 
     return svd_model
