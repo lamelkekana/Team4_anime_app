@@ -1,6 +1,6 @@
 ## Anime Recommendation System
 
-![App pic](app_pic.png)
+![App pic]([app_pic.png](https://github.com/lamelkekana/Team4_anime_app/blob/main/app%20pic.png?raw=true))
 
 ### 📌 Overview
 
